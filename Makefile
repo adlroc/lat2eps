@@ -1,25 +1,13 @@
-CC = clang
-CPP = clang++
+CC = gcc
 
-CFLAGS = -O3 -Wall
+CFLAGS = -Wall -O3
 LFLAGS = 
 
-SRCSC = $(wildcard *.c)
-
-SRCSCPP = $(wildcard *.cpp)
-
-PROGSC = $(patsubst %.c,%,$(SRCSC))
-
-PROGSCPP = $(patsubst %.cpp,%,$(SRCSCPP))
-
-all: $(PROGSC) $(PROGSCPP)
+all: lat2eps
 
 clean:
-	rm -rf $(PROGSC) $(PROGSCPP) *.dSYM
+	rm -f lat2eps *.o
 
-%: %.c
-	$(CC) $(CFLAGS)  -o $@ $<
-
-%: %.cpp
-	$(CPP) $(CFLAGS)  -o $@ $<
+lat2eps:	lat2eps.c
+	$(CC) $(CFLAGS) $(LFLAGS) lat2eps.c -o lat2eps
 
