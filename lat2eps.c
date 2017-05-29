@@ -1,6 +1,6 @@
 
 /*
- *  lat2eps 1.1
+ *  lat2eps 1.2
  *
  *  Coded by Andre de la Rocha. Public domain.
  */
@@ -17,12 +17,12 @@
 
 
 static int lattice[MAXL][MAXL];
-static int palette[MAXQ] = { 0x000000, 0xFFFFFF, 0xBE2633, 0x44891A, 0x005784, 0xF7E26B, 0xA46422, 0xB2DCEF, 0xEB8931, 0x1B2632, 0xE06F8B, 0x493C2B, 0x2F484E, 0x9D9D9D, 0x31A2F2, 0xA3CE27 };
+static int palette[MAXQ] = { 0xFFFFFF, 0x000000, 0xBE2633, 0x44891A, 0x005784, 0xF7E26B, 0xA46422, 0xB2DCEF, 0xEB8931, 0x1B2632, 0xE06F8B, 0x493C2B, 0x2F484E, 0x9D9D9D, 0x31A2F2, 0xA3CE27 };
 
 
 void print_usage()
 {
-	fprintf(stderr, "Usage: lat2eps <off x> <off y> <width> <height> <scale> [hex palette]\n");
+	fprintf(stderr, "Usage: lat2eps <off x> <off y> <width> <height> <border> <scale> [hex palette]\n");
 }
 
 
@@ -77,11 +77,11 @@ void read_lattice(FILE *f, int offx, int offy, int width, int height)
 
 
 // Generates EPS prolog, including L/P procedures and palette definition.
-void gen_eps_prolog(FILE *f, int width, int height, int scale)
+void gen_eps_prolog(FILE *f, int width, int height, int scale, int border)
 {
 	fprintf(f, "%%!PS-Adobe-2.0 EPSF-2.0\n");
-	fprintf(f, "%%%%Creator: lat2eps 1.1\n");
-	fprintf(f, "%%%%BoundingBox: 0 0 %d %d\n", width*scale, height*scale);
+	fprintf(f, "%%%%Creator: lat2eps 1.2\n");
+	fprintf(f, "%%%%BoundingBox: %d %d %d %d\n", -border, -border, width * scale + border, height * scale + border);
 	fprintf(f, "%%%%EndComments\n");
 	fprintf(f, "%%%%BeginProlog\n");
 	fprintf(f, "/L { 2 rectfill } def\n");    // Line procedure. The extra row is for adding overlap between lines, to work around an anti-aliasing bug in several ps/pdf viewers that would show glitches otherwise.
@@ -92,6 +92,17 @@ void gen_eps_prolog(FILE *f, int width, int height, int scale)
 	fprintf(f, "%%%%Page: 1 1\n");
 	fprintf(f, "%d %d scale\n", scale, -scale);  // Inverts y axis to be top to bottom.
 	fprintf(f, "0 %d translate\n", -height);
+}
+
+
+// Generates EPS epilog.
+void gen_eps_epilog(FILE *f, int width, int height, int scale, int border)
+{
+	if (border > 0) {
+		fprintf(f, "0 0 0 setrgbcolor\n");
+		fprintf(f, "%f setlinewidth\n", (float)border / scale);
+		fprintf(f, "%f %f %f %f rectstroke\n", -0.5 * border / scale, -0.5 * border / scale, width + (float)border / scale, height + (float)border / scale);
+	}
 }
 
 
@@ -124,7 +135,7 @@ void gen_eps_lattice(FILE *f, int width, int height)
 
 int main(int argc, char *argv[])
 {
-	if (argc < 6) {
+	if (argc < 7) {
 		print_usage();
 		return -1;
 	}
@@ -135,9 +146,10 @@ int main(int argc, char *argv[])
 	int offy = atoi(argv[arg++]);
 	int width = atoi(argv[arg++]);
 	int height = atoi(argv[arg++]);
+	int border = atoi(argv[arg++]);
 	int scale = atoi(argv[arg++]);
 	
-	if ((width <= 0) || (width > MAXL) || (height <= 0) || (height > MAXL) || (scale <= 0)) {
+	if ((width <= 0) || (width > MAXL) || (height <= 0) || (height > MAXL) || (border < 0) || (scale <= 0)) {
 		print_usage();
 		return -1;
 	}
@@ -149,8 +161,9 @@ int main(int argc, char *argv[])
 	}
 
 	read_lattice(stdin, offx, offy, width, height);
-	gen_eps_prolog(stdout, width, height, scale);
+	gen_eps_prolog(stdout, width, height, scale, border);
 	gen_eps_lattice(stdout, width, height);
+	gen_eps_epilog(stdout, width, height, scale, border);
 
 	return 0;
 }
