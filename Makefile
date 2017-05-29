@@ -1,6 +1,6 @@
 CC = gcc
 
-CFLAGS = -Wall -O3
+CFLAGS = -Wall -std=c99 -O3
 LFLAGS = 
 
 all: lat2eps
