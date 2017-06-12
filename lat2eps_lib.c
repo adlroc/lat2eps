@@ -1,6 +1,6 @@
 
 /*
- *  lat2eps lib 1.3
+ *  lat2eps 1.3
  *
  *  Coded by Andre de la Rocha. Public domain.
  */
@@ -17,7 +17,8 @@
 
 
 static int *lattice = NULL;
-static unsigned int palette[LAT2EPS_MAXQ] = { 0xFFFFFF, 0x000000, 0xBE2633, 0x44891A, 0x005784, 0xF7E26B, 0xA46422, 0xB2DCEF, 0xEB8931, 0x1B2632, 0xE06F8B, 0x493C2B, 0x2F484E, 0x9D9D9D, 0x31A2F2, 0xA3CE27 };
+static unsigned int defpalette[] = { 0xFFFFFF, 0x000000, 0xBE2633, 0x44891A, 0x005784, 0xF7E26B, 0xA46422, 0xB2DCEF, 0xEB8931, 0x1B2632, 0xE06F8B, 0x493C2B, 0x2F484E, 0x9D9D9D, 0x31A2F2, 0xA3CE27 };
+static unsigned int palette[LAT2EPS_MAXQ];
 
 static unsigned int maxwidth = 0;
 static unsigned int maxheight = 0;
@@ -45,6 +46,8 @@ static void gen_eps_lattice(FILE *f, unsigned int offx, unsigned int offy, unsig
 /* Initializes the lattice resources. */
 int lat2eps_init(unsigned int maxw, unsigned int maxh)
 {
+	unsigned int i;
+
 	release_resources();
 	
 	if ((maxw > LAT2EPS_MAXL) || (maxh > LAT2EPS_MAXL)) {
@@ -57,6 +60,11 @@ int lat2eps_init(unsigned int maxw, unsigned int maxh)
 	maxwidth = maxw;
 	maxheight = maxh;
 	
+	/* Initializes the initial palette by repeating the colors from the default palette table. */
+	for (i = 0; i < LAT2EPS_MAXQ; ++i) {
+		palette[i] = defpalette[i % (sizeof(defpalette)/sizeof(defpalette[0]))];
+	}
+
 	return 1;
 }
 

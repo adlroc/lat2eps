@@ -1,4 +1,7 @@
 project.xcworkspace
 xcuserdata
+lat2eps
+test
 *.o
+*.a
 *.eps

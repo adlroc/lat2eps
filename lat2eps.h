@@ -14,7 +14,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-#define LAT2EPS_MAXQ     16   /* Maximum number of different site colors */
+#define LAT2EPS_MAXQ    256   /* Maximum number of different site colors */
 #define LAT2EPS_MAXT   2048   /* Maximum number of text entries */
 #define LAT2EPS_MAXL  16384   /* Maximum linear dimension of the lattice. */
 
