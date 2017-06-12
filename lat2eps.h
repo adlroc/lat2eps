@@ -14,12 +14,18 @@ extern "C" {
 #endif /* __cplusplus */
 
 
+#define LAT2EPS_MAXQ     16   /* Maximum number of different site colors */
+#define LAT2EPS_MAXT   2048   /* Maximum number of text entries */
+#define LAT2EPS_MAXL  16384   /* Maximum linear dimension of the lattice. */
+
+
 /**
 * Initializes the lattice resources.
 * @param maxw Maximum lattice width.
 * @param maxh Maximum lattice height.
+* @return     Zero for failure, non-zero for success.
 */
-void lat2eps_init(unsigned int maxw, unsigned int maxh);
+int lat2eps_init(unsigned int maxw, unsigned int maxh);
 
 
 /**

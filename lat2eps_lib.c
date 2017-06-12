@@ -10,17 +10,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "lat2eps_lib.h"
+#include "lat2eps.h"
 
-
-#define MAXQ    16   /* Maximum number of different site colors */
-#define MAXT  2048   /* Maximum number of text entries */
 
 #define CREATOR_STR  "lat2eps 1.3"
 
 
 static int *lattice = NULL;
-static unsigned int palette[MAXQ] = { 0xFFFFFF, 0x000000, 0xBE2633, 0x44891A, 0x005784, 0xF7E26B, 0xA46422, 0xB2DCEF, 0xEB8931, 0x1B2632, 0xE06F8B, 0x493C2B, 0x2F484E, 0x9D9D9D, 0x31A2F2, 0xA3CE27 };
+static unsigned int palette[LAT2EPS_MAXQ] = { 0xFFFFFF, 0x000000, 0xBE2633, 0x44891A, 0x005784, 0xF7E26B, 0xA46422, 0xB2DCEF, 0xEB8931, 0x1B2632, 0xE06F8B, 0x493C2B, 0x2F484E, 0x9D9D9D, 0x31A2F2, 0xA3CE27 };
 
 static unsigned int maxwidth = 0;
 static unsigned int maxheight = 0;
@@ -35,7 +32,7 @@ static struct {
 	unsigned int size;
 	unsigned int color;
 	char *text;
-} textentry[MAXT];
+} textentry[LAT2EPS_MAXT];
 
 
 /* Private functions */
@@ -46,15 +43,21 @@ static void gen_eps_lattice(FILE *f, unsigned int offx, unsigned int offy, unsig
 
 
 /* Initializes the lattice resources. */
-void lat2eps_init(unsigned int maxw, unsigned int maxh)
+int lat2eps_init(unsigned int maxw, unsigned int maxh)
 {
 	release_resources();
 	
+	if ((maxw > LAT2EPS_MAXL) || (maxh > LAT2EPS_MAXL)) {
+		return 0;
+	}
+
 	lattice = (int *)calloc((size_t)(maxw * maxh), sizeof(int));
 
 	txtcounter = 0;
 	maxwidth = maxw;
 	maxheight = maxh;
+	
+	return 1;
 }
 
 
@@ -77,7 +80,7 @@ void lat2eps_set_site(unsigned int x, unsigned int y, int s)
 /* Sets a color index to a palette entry in the 0xRRGGBB format. */
 void lat2eps_set_color(unsigned int index, unsigned int pal)
 {
-	if (index < MAXQ) {
+	if (index < LAT2EPS_MAXQ) {
 		palette[index] = pal;
 	}
 }
@@ -86,7 +89,7 @@ void lat2eps_set_color(unsigned int index, unsigned int pal)
 /* Adds a text entry */
 void lat2eps_text_out(float x, float y, float ax, float ay, float angle, unsigned int size, unsigned int color, const char *text)
 {
-	if ((txtcounter < MAXT) && (color < MAXQ) && text) {
+	if ((txtcounter < LAT2EPS_MAXT) && (color < LAT2EPS_MAXQ) && text) {
 		textentry[txtcounter].x = x;
 		textentry[txtcounter].y = y;
 		textentry[txtcounter].ax = ax;
@@ -168,7 +171,7 @@ static void gen_eps_prolog(FILE *f, unsigned int width, unsigned int height, uns
 	fprintf(f, "YY neg WW RR sin mul AX mul sub HH RR cos mul 1 AY sub mul sub newpath moveto RR rotate SS show grestore } def\n");
 
 	/* Palette */
-	for (i = 0; i < MAXQ; ++i) {
+	for (i = 0; i < LAT2EPS_MAXQ; ++i) {
 		fprintf(f, "/C%X { %f %f %f setrgbcolor } def\n", i, ((palette[i] >> 16) & 255)/255.0, ((palette[i] >> 8) & 255)/255.0, (palette[i] & 255)/255.0);
 	}
 
@@ -214,7 +217,7 @@ static void gen_eps_lattice(FILE *f, unsigned int offx, unsigned int offy, unsig
 			while ((x + cnt < width) && (lattice[(offy + y) * maxwidth + offx + x + cnt] == s)) ++cnt;
 			
 			/* Maps any positive or negative site value to one of the available colors. */
-			col = (s >= 0) ? (s % MAXQ) : (MAXQ - 1 - (-s % MAXQ));
+			col = (s >= 0) ? (s % LAT2EPS_MAXQ) : (LAT2EPS_MAXQ - 1 - (-s % LAT2EPS_MAXQ));
 			
 			if (cnt > 1)
 				fprintf(f, "C%X %u %u %u L\n", col, x, y, cnt);
