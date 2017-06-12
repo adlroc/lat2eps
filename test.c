@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
 
 	if (!lat2eps_init(L, L)) return -1;
 
-	lat2eps_set_color(0, 0x606090);
-	lat2eps_set_color(1, 0x00ff00);
+	lat2eps_set_color(9, 0x606090);
+	lat2eps_set_color(10, 0x00aa00);
 
 	for (y = 0; y < L; ++y) {
 		for (x = 0; x < L; ++x) {
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 		float ar = (ag+90)/180.0*M_PI;
 		float sz = 15 + 25 * rt;
 		s[0] += i % 6;
-		lat2eps_text_out(L/2 + r * cos(ar), L/2 - r * sin(ar), 0.5, 0.5, ag, (int)(sz+0.5), 1 + i % 15, s);
+		lat2eps_text_out(L/2 + r * cos(ar), L/2 - r * sin(ar), 0.5, 0.5, ag, (int)(sz+0.5), i % LAT2EPS_MAXQ, s);
 	}
 
 	lat2eps_gen_eps("test.eps", 0, 0, L, L, 1, 1);
