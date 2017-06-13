@@ -63,7 +63,7 @@ void lat2eps_set_color(unsigned int index, unsigned int pal);
 * @param x      X coordinate.
 * @param y      Y coordinate.
 * @param ax     Horizontal alignment. 0 for left-aligning the text relative to the X coordinate, 0.5 for centering it, 1 for right-aligning, etc.
-* @param ax     Vertical alignment. 0 for placing the top of the text on the Y coordinate, 0.5 for centering it, 1 for placing the bottom of the text, etc.
+* @param ay     Vertical alignment. 0 for placing the top of the text on the Y coordinate, 0.5 for centering it, 1 for placing the bottom of the text, etc.
 * @param angle  Angle to rotate the text, in degrees (0 for horizontal, left to right text).
 * @param size   Font size.
 * @param color  Color index.
