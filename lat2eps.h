@@ -1,8 +1,13 @@
-
 /*
- *  lat2eps lib 1.3
+ *  lat2eps 2.x
  *
- *  Coded by Andre de la Rocha. Public domain.
+ *  Copyright 2017 Andre R. de la Rocha
+ *  
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+ *  OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
 
@@ -15,8 +20,10 @@ extern "C" {
 
 
 #define LAT2EPS_MAXQ    256   /* Maximum number of different site colors */
-#define LAT2EPS_MAXT   2048   /* Maximum number of text entries */
+#define LAT2EPS_MAXT   4096   /* Maximum number of text entries */
 #define LAT2EPS_MAXL  16384   /* Maximum linear dimension of the lattice. */
+
+#define LAT2EPS_VERS  "lat2eps 2.0"
 
 
 /**
@@ -69,15 +76,15 @@ void lat2eps_text_out(float x, float y, float ax, float ay, float angle, unsigne
 /**
 * Generates lattice graphic in EPS.
 * @param filename  Name of the EPS file that will be created, or NULL for outputting to stdout.
-* @param offx      Offset of the first lattice column that will be saved in the output.
-* @param offy      Offset of the first lattice row that will be saved in the output.
+* @param xoff      Offset of the first lattice column that will be saved in the output.
+* @param yoff      Offset of the first lattice row that will be saved in the output.
 * @param width     Width (in sites) of the sublattice that will be saved in the output
 * @param height    Height (in sites) of the sublattice that will be saved in the output
 * @param border    Width of a border that will be placed in the graphic (0 for no border).
 * @param scale     Scale that will be used while generating the graphic (e.g., using 2 will create a 2x2 pixel square for each site).
 * @return          Zero for failure, non-zero for success.
 */
-int lat2eps_gen_eps(const char *filename, unsigned int offx, unsigned int offy, unsigned int width, unsigned int height, unsigned int border, unsigned int scale);
+int lat2eps_gen_eps(const char *filename, unsigned int xoff, unsigned int yoff, unsigned int width, unsigned int height, unsigned int border, unsigned int scale);
 
 
 #ifdef __cplusplus

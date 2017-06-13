@@ -1,8 +1,13 @@
-
 /*
- *  lat2eps 1.3
+ *  lat2eps 2.x
  *
- *  Coded by Andre de la Rocha. Public domain.
+ *  Copyright 2017 Andre R. de la Rocha
+ *  
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+ *  OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
 
@@ -11,9 +16,6 @@
 #include <string.h>
 #include <ctype.h>
 #include "lat2eps.h"
-
-
-#define CREATOR_STR  "lat2eps 1.3"
 
 
 static int *lattice = NULL;
@@ -40,7 +42,7 @@ static struct {
 static void release_resources();
 static void gen_eps_prolog(FILE *f, unsigned int width, unsigned int height, unsigned int scale, unsigned int border);
 static void gen_eps_epilog(FILE *f, unsigned int width, unsigned int height, unsigned int scale, unsigned int border);
-static void gen_eps_lattice(FILE *f, unsigned int offx, unsigned int offy, unsigned int width, unsigned int height);
+static void gen_eps_lattice(FILE *f, unsigned int xoff, unsigned int yoff, unsigned int width, unsigned int height);
 
 
 /* Initializes the lattice resources. */
@@ -54,15 +56,15 @@ int lat2eps_init(unsigned int maxw, unsigned int maxh)
 		return 0;
 	}
 
-	lattice = (int *)calloc((size_t)(maxw * maxh), sizeof(int));
-
-	txtcounter = 0;
 	maxwidth = maxw;
 	maxheight = maxh;
+	txtcounter = 0;
 	
-	/* Initializes the initial palette by repeating the colors from the default palette table. */
+	lattice = (int *)calloc((size_t)(maxw * maxh), sizeof(int));
+
+	/* Initializes the initial palette table by repeating the colors from the default palette table. */
 	for (i = 0; i < LAT2EPS_MAXQ; ++i) {
-		palette[i] = defpalette[i % (sizeof(defpalette)/sizeof(defpalette[0]))];
+		palette[i] = defpalette[i % (sizeof(defpalette) / sizeof(defpalette[0]))];
 	}
 
 	return 1;
@@ -97,7 +99,7 @@ void lat2eps_set_color(unsigned int index, unsigned int pal)
 /* Adds a text entry */
 void lat2eps_text_out(float x, float y, float ax, float ay, float angle, unsigned int size, unsigned int color, const char *text)
 {
-	if ((txtcounter < LAT2EPS_MAXT) && (color < LAT2EPS_MAXQ) && text) {
+	if ((txtcounter < LAT2EPS_MAXT) && (color < LAT2EPS_MAXQ) && text && (strlen(text) > 0)) {
 		textentry[txtcounter].x = x;
 		textentry[txtcounter].y = y;
 		textentry[txtcounter].ax = ax;
@@ -112,11 +114,11 @@ void lat2eps_text_out(float x, float y, float ax, float ay, float angle, unsigne
 
 
 /* Generates lattice graphic in EPS. */
-int lat2eps_gen_eps(const char *filename, unsigned int offx, unsigned int offy, unsigned int width, unsigned int height, unsigned int border, unsigned int scale)
+int lat2eps_gen_eps(const char *filename, unsigned int xoff, unsigned int yoff, unsigned int width, unsigned int height, unsigned int border, unsigned int scale)
 {
 	FILE *f;
 
-	if ((width == 0) || (offx + width > maxwidth) || (height == 0) || (offy + height > maxheight) || (scale == 0)) {
+	if ((width == 0) || (xoff + width > maxwidth) || (height == 0) || (yoff + height > maxheight) || (scale == 0)) {
 		return 0;
 	}
 
@@ -129,7 +131,7 @@ int lat2eps_gen_eps(const char *filename, unsigned int offx, unsigned int offy, 
 	}
 
 	gen_eps_prolog(f, width, height, scale, border);
-	gen_eps_lattice(f, offx, offy, width, height);
+	gen_eps_lattice(f, xoff, yoff, width, height);
 	gen_eps_epilog(f, width, height, scale, border);
 
 	if (filename) {
@@ -162,7 +164,7 @@ static void gen_eps_prolog(FILE *f, unsigned int width, unsigned int height, uns
 	unsigned int i;
 
 	fprintf(f, "%%!PS-Adobe-2.0 EPSF-2.0\n");
-	fprintf(f, "%%%%Creator: %s\n", CREATOR_STR);
+	fprintf(f, "%%%%Creator: %s\n", LAT2EPS_VERS);
 	fprintf(f, "%%%%BoundingBox: %d %d %d %d\n", -border, -border, width * scale + border, height * scale + border);
 	fprintf(f, "%%%%EndComments\n");
 	fprintf(f, "%%%%BeginProlog\n");
@@ -210,7 +212,7 @@ static void gen_eps_epilog(FILE *f, unsigned int width, unsigned int height, uns
 
 
 /* Generates lattice graphic in EPS. Each lattice line is run-length encoded, generating a single "line" call for a sequence of adjacent sites of the same type. */
-static void gen_eps_lattice(FILE *f, unsigned int offx, unsigned int offy, unsigned int width, unsigned int height)
+static void gen_eps_lattice(FILE *f, unsigned int xoff, unsigned int yoff, unsigned int width, unsigned int height)
 {
 	unsigned int x, y, col;
 
@@ -218,11 +220,11 @@ static void gen_eps_lattice(FILE *f, unsigned int offx, unsigned int offy, unsig
 
 		for (x = 0; x < width;) {
 
-			int s = lattice[(offy + y) * maxwidth + offx + x];
+			int s = lattice[(yoff + y) * maxwidth + xoff + x];
 			unsigned int cnt = 1;
 
 			/* Counts the length of a sequence of sites of the same type. */
-			while ((x + cnt < width) && (lattice[(offy + y) * maxwidth + offx + x + cnt] == s)) ++cnt;
+			while ((x + cnt < width) && (lattice[(yoff + y) * maxwidth + xoff + x + cnt] == s)) ++cnt;
 			
 			/* Maps any positive or negative site value to one of the available colors. */
 			col = (s >= 0) ? (s % LAT2EPS_MAXQ) : (LAT2EPS_MAXQ - 1 - (-s % LAT2EPS_MAXQ));
