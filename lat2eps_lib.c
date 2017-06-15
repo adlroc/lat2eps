@@ -46,21 +46,21 @@ static void gen_eps_lattice(FILE *f, unsigned int xoff, unsigned int yoff, unsig
 
 
 /* Initializes the lattice resources. */
-int lat2eps_init(unsigned int maxw, unsigned int maxh)
+int lat2eps_init(unsigned int width, unsigned int height)
 {
 	unsigned int i;
 
 	release_resources();
 	
-	if ((maxw > LAT2EPS_MAXL) || (maxh > LAT2EPS_MAXL)) {
+	if ((width > LAT2EPS_MAXL) || (height > LAT2EPS_MAXL)) {
 		return 0;
 	}
 
-	maxwidth = maxw;
-	maxheight = maxh;
+	maxwidth = width;
+	maxheight = height;
 	txtcounter = 0;
 	
-	lattice = (int *)calloc((size_t)(maxw * maxh), sizeof(int));
+	lattice = (int *)calloc((size_t)(width * height), sizeof(int));
 
 	/* Initializes the initial palette table by repeating the colors from the default palette table. */
 	for (i = 0; i < LAT2EPS_MAXQ; ++i) {

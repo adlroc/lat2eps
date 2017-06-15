@@ -30,11 +30,11 @@ extern "C" {
 
 /**
 * Initializes the lattice resources. Must be called before any other lat2eps function.
-* @param maxw Maximum lattice width.
-* @param maxh Maximum lattice height.
+* @param width  Lattice width (in sites).
+* @param height Lattice height (in sites).
 * @return     Zero for failure, non-zero for success.
 */
-int lat2eps_init(unsigned int maxw, unsigned int maxh);
+int lat2eps_init(unsigned int width, unsigned int height);
 
 
 /**
@@ -82,8 +82,8 @@ void lat2eps_text_out(float x, float y, float ax, float ay, float angle, unsigne
 * @param yoff      Offset of the first lattice row that will be saved in the output.
 * @param width     Width (in sites) of the sublattice that will be saved in the output.
 * @param height    Height (in sites) of the sublattice that will be saved in the output.
-* @param border    Width of a border that will be placed in the graphic (0 for no border).
-* @param scale     Scale that will be used while generating the graphic (e.g., using 2 will create a 2x2 pixel square for each site).
+* @param border    Width of a black border that will be placed in the graphic (0 for no border).
+* @param scale     Scale that will be used while generating the graphic (e.g., using 2 will create a 2x2 pixel square for each lattice site).
 * @return          Zero for failure, non-zero for success.
 */
 int lat2eps_gen_eps(const char *filename, unsigned int xoff, unsigned int yoff, unsigned int width, unsigned int height, unsigned int border, unsigned int scale);
