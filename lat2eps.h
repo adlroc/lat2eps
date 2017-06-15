@@ -10,6 +10,8 @@
  *  OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
+/** @file lat2eps.h */
+
 
 #ifndef _LAT2EPS_H
 #define _LAT2EPS_H
@@ -19,15 +21,15 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-#define LAT2EPS_MAXQ    256   /* Maximum number of different site colors */
-#define LAT2EPS_MAXT   4096   /* Maximum number of text entries */
-#define LAT2EPS_MAXL  16384   /* Maximum linear dimension of the lattice. */
+#define LAT2EPS_MAXQ    256   /*!< Maximum number of different site colors. */
+#define LAT2EPS_MAXT   4096   /*!< Maximum number of text entries.          */
+#define LAT2EPS_MAXL  16384   /*!< Maximum linear dimension of the lattice. */
 
-#define LAT2EPS_VERS  "lat2eps 2.0"
+#define LAT2EPS_VERS  "lat2eps 2.0"   /*!< Version string. */
 
 
 /**
-* Initializes the lattice resources.
+* Initializes the lattice resources. Must be called before any other lat2eps function.
 * @param maxw Maximum lattice width.
 * @param maxh Maximum lattice height.
 * @return     Zero for failure, non-zero for success.
@@ -36,7 +38,7 @@ int lat2eps_init(unsigned int maxw, unsigned int maxh);
 
 
 /**
-* Releases the lattice resources.
+* Releases the resources allocated by lat2eps_init().
 */
 void lat2eps_release();
 
@@ -51,35 +53,35 @@ void lat2eps_set_site(unsigned int x, unsigned int y, int s);
 
 
 /**
-* Sets a color index to a palette entry in the 0xRRGGBB format.
+* Sets a color index to a palette entry defined in the 0xRRGGBB format.
 * @param index Color index.
-* @param pal   Palette entry in the 0xRRGGBB format
+* @param pal   Palette entry in the 0xRRGGBB format.
 */
 void lat2eps_set_color(unsigned int index, unsigned int pal);
 
 
 /**
-* Adds a text entry.
-* @param x      X coordinate.
-* @param y      Y coordinate.
+* Adds a text message to the EPS output. Must be called before lat2eps_gen_eps().
+* @param x      X coordinate. 0 is the leftmost coordinate.
+* @param y      Y coordinate. 0 is the topmost coordinate.
 * @param ax     Horizontal alignment. 0 for left-aligning the text relative to the X coordinate, 0.5 for centering it, 1 for right-aligning, etc.
 * @param ay     Vertical alignment. 0 for placing the top of the text on the Y coordinate, 0.5 for centering it, 1 for placing the bottom of the text, etc.
-* @param angle  Angle to rotate the text, in degrees (0 for horizontal, left to right text).
+* @param angle  Angle to rotate the text, in degrees (0 for horizontal left to right text).
 * @param size   Font size.
 * @param color  Color index.
 * @param text   Text string.
-* @note         Must be called before lat2eps_gen_eps(). Parentheses must be escaped with backslashes.
+* @note         Parentheses characters in the text must be escaped with backslashes.
 */
 void lat2eps_text_out(float x, float y, float ax, float ay, float angle, unsigned int size, unsigned int color, const char *text);
 
 
 /**
-* Generates lattice graphic in EPS.
+* Generates a lattice graphic in the EPS format.
 * @param filename  Name of the EPS file that will be created, or NULL for outputting to stdout.
 * @param xoff      Offset of the first lattice column that will be saved in the output.
 * @param yoff      Offset of the first lattice row that will be saved in the output.
-* @param width     Width (in sites) of the sublattice that will be saved in the output
-* @param height    Height (in sites) of the sublattice that will be saved in the output
+* @param width     Width (in sites) of the sublattice that will be saved in the output.
+* @param height    Height (in sites) of the sublattice that will be saved in the output.
 * @param border    Width of a border that will be placed in the graphic (0 for no border).
 * @param scale     Scale that will be used while generating the graphic (e.g., using 2 will create a 2x2 pixel square for each site).
 * @return          Zero for failure, non-zero for success.

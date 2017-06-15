@@ -26,7 +26,7 @@
 /* Shows usage info. */
 void print_usage()
 {
-	fprintf(stderr, "Usage: lat2eps <xoff> <yoff> <width> <height> <border> <scale> [optional commands]\n");
+	fprintf(stderr, "Usage: lat2eps <xoff> <yoff> <width> <height> <border> <scale> [optional commands]  < input.dat  > output.eps\n");
 }
 
 
