@@ -165,7 +165,7 @@ static void gen_eps_prolog(FILE *f, unsigned int width, unsigned int height, uns
 
 	fprintf(f, "%%!PS-Adobe-2.0 EPSF-2.0\n");
 	fprintf(f, "%%%%Creator: %s\n", LAT2EPS_VERS);
-	fprintf(f, "%%%%BoundingBox: %d %d %d %d\n", -border, -border, width * scale + border, height * scale + border);
+	fprintf(f, "%%%%BoundingBox: %d %d %u %u\n", -(int)border, -(int)border, width * scale + border, height * scale + border);
 	fprintf(f, "%%%%EndComments\n");
 	fprintf(f, "%%%%BeginProlog\n");
 
@@ -187,8 +187,8 @@ static void gen_eps_prolog(FILE *f, unsigned int width, unsigned int height, uns
 
 	fprintf(f, "%%%%EndProlog\n");
 	fprintf(f, "%%%%Page: 1 1\n");
-	fprintf(f, "%d %d scale\n", scale, -scale);  /* Inverts y axis to be top to bottom. */
-	fprintf(f, "0 %d translate\n", -height);
+	fprintf(f, "%d %d scale\n", (int)scale, -(int)scale);  /* Inverts y axis to be top to bottom. */
+	fprintf(f, "0 %d translate\n", -(int)height);
 }
 
 
