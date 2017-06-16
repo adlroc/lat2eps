@@ -65,7 +65,7 @@ void process_embedded_command(char *buffer)
 	char *tokens[LAT2EPS_MAXQ + 10];
 	const char *separators = ", \t\n\r";
 
-	if (!strncmp(buffer, "TXT", 3) && strchr(separators, buffer[3])) {
+	if (!strncasecmp(buffer, "TXT", 3) && strchr(separators, buffer[3])) {
 		
 		/* Text command */
 
@@ -89,7 +89,7 @@ void process_embedded_command(char *buffer)
 			lat2eps_text_out(x, y, ax, ay, angle, size, coloridx, text);
 		}
 
-	} else if (!strncmp(buffer, "COL", 3) && strchr(separators, buffer[3])) {
+	} else if (!strncasecmp(buffer, "COL", 3) && strchr(separators, buffer[3])) {
 	
 		/* Color command (changes a single color index) */
 
@@ -101,7 +101,7 @@ void process_embedded_command(char *buffer)
 			lat2eps_set_color(coloridx, pal);						
 		}
 
-	} else if (!strncmp(buffer, "PAL", 3) && strchr(separators, buffer[3])) {
+	} else if (!strncasecmp(buffer, "PAL", 3) && strchr(separators, buffer[3])) {
 	
 		/* Palette command (changes the full palette) */
 
