@@ -227,7 +227,7 @@ static void gen_eps_lattice(FILE *f, unsigned int xoff, unsigned int yoff, unsig
 			while ((x + cnt < width) && (lattice[(yoff + y) * maxwidth + xoff + x + cnt] == s)) ++cnt;
 			
 			/* Maps any positive or negative site value to one of the available colors. */
-			col = (s >= 0) ? (s % LAT2EPS_MAXQ) : ((LAT2EPS_MAXQ - 1) - ((-s-1) % LAT2EPS_MAXQ));
+			col = (unsigned int)s % LAT2EPS_MAXQ;
 			
 			if (cnt > 1)
 				fprintf(f, "C%X %u %u %u L\n", col, x, y, cnt);
