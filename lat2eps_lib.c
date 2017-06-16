@@ -19,7 +19,7 @@
 
 
 static int *lattice = NULL;
-static unsigned int defpalette[] = { 0xFFFFFF, 0x000000, 0xBE2633, 0x44891A, 0x005784, 0xF7E26B, 0xA46422, 0xB2DCEF, 0xEB8931, 0x1B2632, 0xE06F8B, 0x493C2B, 0x2F484E, 0x9D9D9D, 0x31A2F2, 0xA3CE27 };
+static unsigned int defpalette[] = { 0xFFFFFF, 0x000000, 0xBE2633, 0x44891A, 0x005784, 0xF7E26B, 0xA46422, 0xB2DCEF, 0xEB8931, 0x1B2632, 0xE06F8B, 0x493C2B, 0x2F484E, 0x9D9D9D, 0xA3CE27, 0x31A2F2 };
 static unsigned int palette[LAT2EPS_MAXQ];
 
 static unsigned int maxwidth = 0;
@@ -227,7 +227,7 @@ static void gen_eps_lattice(FILE *f, unsigned int xoff, unsigned int yoff, unsig
 			while ((x + cnt < width) && (lattice[(yoff + y) * maxwidth + xoff + x + cnt] == s)) ++cnt;
 			
 			/* Maps any positive or negative site value to one of the available colors. */
-			col = (s >= 0) ? (s % LAT2EPS_MAXQ) : (LAT2EPS_MAXQ - 1 - (-s % LAT2EPS_MAXQ));
+			col = (s >= 0) ? (s % LAT2EPS_MAXQ) : ((LAT2EPS_MAXQ - 1) - ((-s-1) % LAT2EPS_MAXQ));
 			
 			if (cnt > 1)
 				fprintf(f, "C%X %u %u %u L\n", col, x, y, cnt);
