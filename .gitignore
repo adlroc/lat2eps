@@ -2,6 +2,10 @@ project.xcworkspace
 xcuserdata
 lat2eps
 test
+test2
 *.o
 *.a
 *.eps
+*.aux
+*.log
+*.out
