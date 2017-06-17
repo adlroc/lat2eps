@@ -12,7 +12,7 @@ clean:
 	rm -f *.o
 
 cleaner:
-	rm -f liblat2eps.a lat2eps test *.o
+	rm -f liblat2eps.a lat2eps test test2 *.o
 
 liblat2eps.a:	lat2eps_lib.o
 	$(AR) rcs liblat2eps.a lat2eps_lib.o
