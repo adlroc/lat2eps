@@ -79,8 +79,8 @@ unsigned int lat2eps_get_color(unsigned int index);
 
 /**
 * Adds a text message to the EPS output. Must be called before lat2eps_gen_eps().
-* @param x      X coordinate. 0 is the leftmost coordinate.
-* @param y      Y coordinate. 0 is the topmost coordinate.
+* @param x      Horizontal coordinate where the text will be positioned. 0 is the leftmost coordinate, while the maximum value is defined by the lattice width.
+* @param y      Vertical coordinate where the text will be positioned. 0 is the topmost coordinate, while the maximum value is defined by the lattice height.
 * @param ax     Horizontal alignment. 0 for left-aligning the text relative to the X coordinate, 0.5 for centering it, 1 for right-aligning, etc.
 * @param ay     Vertical alignment. 0 for placing the top of the text on the Y coordinate, 0.5 for centering it, 1 for placing the bottom of the text, etc.
 * @param angle  Angle to rotate the text, in degrees (0 for horizontal left to right text).
@@ -95,10 +95,10 @@ void lat2eps_text_out(float x, float y, float ax, float ay, float angle, unsigne
 /**
 * Generates a lattice graphic in the EPS format.
 * @param filename  Name of the EPS file that will be created, or NULL for outputting to stdout.
-* @param xoff      Offset of the first lattice column that will be saved in the output.
-* @param yoff      Offset of the first lattice row that will be saved in the output.
-* @param width     Width (in sites) of the sublattice that will be saved in the output.
-* @param height    Height (in sites) of the sublattice that will be saved in the output.
+* @param xoff      Offset of the first lattice column that will be presented in the output.
+* @param yoff      Offset of the first lattice row that will be presented in the output.
+* @param width     Width (in sites) of the sublattice that will be presented in the output.
+* @param height    Height (in sites) of the sublattice that will be presented in the output.
 * @param border    Width of a black border that will be placed in the graphic (0 for no border).
 * @param scale     Scale that will be used while generating the graphic (e.g., using 2 will create a 2x2 pixel square for each lattice site).
 * @return          Zero for failure, non-zero for success.

@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 {
 	int x, y, i;
 
-	/* Initializes lat2eps lib for a lattice of width L and height L. */
+	/* Initializes liblat2eps for a lattice of width L and height L. */
 	if (!lat2eps_init(L, L)) return -1;
 
 	lat2eps_set_color(9, 0x6070a0);  /* Sets color number 9 to red:60 green:70 blue:a0 */

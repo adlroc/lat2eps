@@ -23,13 +23,13 @@ lat2eps is a small command-line utility for Linux, Unix and macOS that generates
 lat2eps reads the lattice data from the standard input and outputs the EPS data to the standard output. The input file is a simple Gnuplot-compatible text file, where data lines contain at least 3 integer fields separated by spaces, where the first two are the horizontal and vertical coordinates of the lattice site, and the third is the site value. Lines beginning with the \# character are considered comments and ignored, unless they contain embedded internal commands, described below.
 \bigbreak
 
-There are 256 different color indexes, ranging from 0 to 255, which can be used to draw lattice sites of different values. Site values are mapped to color indexes according to a simple rule: $index = value \bmod 256$. Negative values are first converted to unsigned values (e.g., -1 is converted to 255, -2 to 254, and so on.). Note: a palette of only 16 different colors is initially defined, repeated over the 256 possible indexes. Thus, if more than 16 colors are needed, they must be redefined, as described below.
+There are 256 different color indexes, ranging from 0 to 255, which can be used to draw lattice sites of different values. Site values are mapped to color indexes according to a simple rule: $index = value \bmod 256$. Negative values are first converted to unsigned values (e.g., -1 is converted to 255, -2 to 254, and so on). Note: a palette of only 16 different colors is initially defined, repeated over the 256 possible indexes. Thus, if more than 16 colors are needed, they must be redefined, as described below.
 \bigbreak
 
 
 \section{Installation}
 
-lat2eps is open source software supplied in source code form. It can be built with the \textit{make} command, which will generate the \texttt{lat2eps} executable, which can be manually copied to a directory within the user's path, like, e.g., \texttt{/usr/local/bin}. The \textit{gcc} or \textit{clang} compilers must be installed in the system for the build process to succeed.
+lat2eps is open source software supplied in source code form. It can be built with the \textit{make} command, which will generate the \texttt{lat2eps} executable, which can be manually copied to a directory within the user's path, like, e.g., \texttt{/usr/local/bin}. The \textit{gcc} or \textit{clang} compiler must be installed in the system for the build process to succeed.
 \bigbreak
 
 
@@ -41,13 +41,13 @@ The basic command usage is:
 \texttt{lat2eps  xoff yoff width height border scale  <input.dat  >output.eps}
 \bigbreak
 
-Where xoff, yoff, width and height define offsets and dimensions (in sites) of a region within the lattice that will be used to generate the EPS output.
+Where \textit{xoff}, \textit{yoff}, \textit{width} and \textit{height} define offsets and dimensions (in sites) of a region within the lattice that will be used to generate the EPS output.
 \bigbreak
 
-Border is the width of a black border generated around the lattice graphic, or 0 for generating a borderless graphic.
+\textit{border} is the width of a black border generated around the lattice graphic, or 0 for generating a borderless graphic.
 \bigbreak
 
-Scale is a positive integer value defining the scale used in the conversion of the lattice data to EPS. E.g., when the scale is set to 3, each lattice site will generate a 3x3 pixel square in the EPS output.
+\textit{scale} is a positive integer value defining the scale used in the conversion of the lattice data to EPS. E.g., when the scale is set to 3, each lattice site will generate a 3x3 pixel square in the EPS output.
 \bigbreak
 
 
@@ -63,14 +63,14 @@ Embedded commands can be placed within a lattice data file passed as input to la
 The TXT embedded command is used to generate text entries over the lattice graphic. It can be used to generate text lines to appear in the graphic as they are, or tags that can be later replaced by LaTeX text using PSFrag. The parameters are the following:
 
 \begin{itemize}
-  \item X is the horizontal coordinate where the text will be positioned. 0 is the leftmost coordinate, and the maximum horizontal coordinate is defined by the lattice width.
-  \item Y is the vertical coordinate where the text will be positioned. 0 is the topmost coordinate, and the maximum vertical coordinate is defined by the lattice height.
-  \item AX defines the horizontal alignment. 0 for left-aligning the text relative to the X coordinate, 0.5 for centering it on the X coordinate, 1 for right-aligning it, etc.
-  \item AY defines the vertical alignment. 0 for placing the top of the text on the Y coordinate, 0.5 for centering it on the Y coordinate, 1 for placing the bottom of the text on the Y coordinate, etc.
-  \item ANGLE defines the angle to rotate the text, in degrees (0 for horizontal).
-  \item SIZE defines the font size.
-  \item COLOR defines the color index used to draw the text.
-  \item TEXT is the text to be added. It can contain any characters including spaces and commas; parentheses characters, however, must be escaped with backslashes.
+  \item \textit{X} is the horizontal coordinate where the text will be positioned. 0 is the leftmost coordinate, while the maximum horizontal coordinate is defined by the lattice width.
+  \item \textit{Y} is the vertical coordinate where the text will be positioned. 0 is the topmost coordinate, while the maximum vertical coordinate is defined by the lattice height.
+  \item \textit{AX} defines the horizontal alignment. 0 for left-aligning the text relative to the X coordinate, 0.5 for centering it on the X coordinate, 1 for right-aligning it, etc.
+  \item \textit{AY} defines the vertical alignment. 0 for placing the top of the text on the Y coordinate, 0.5 for centering it on the Y coordinate, 1 for placing the bottom of the text on the Y coordinate, etc.
+  \item \textit{ANGLE} defines the angle to rotate the text, in degrees (0 for horizontal).
+  \item \textit{SIZE} defines the font size.
+  \item \textit{COLOR} defines the color index used to draw the text.
+  \item \textit{TEXT} is the text to be generated. It can contain any characters including spaces and commas; parentheses characters, however, must be escaped with backslashes.
 \end{itemize} 
 \bigbreak\bigbreak
 
@@ -89,7 +89,7 @@ The COL embedded command can be used to redefine a single color index. It receiv
 Sample lattice data file with embedded commands:
 \bigbreak
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=single]
 # Embedded commands here:
 #TXT 128, 250, 0.5, 1, 0, 20, 1, X
 #TXT 6, 128, 0.5, 0, 90, 20, 6, Y
