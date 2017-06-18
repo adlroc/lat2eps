@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	lat2eps_text_out(L-10, 10, 1, 1, 90, 25, 0, "TAG2");  /* Places text at x:L-10 y:10, anchored to bottom-right (ax:1.0, ay:1.0), rotated 90 degrees CCW, with font size 25, in color number 0 */
 	lat2eps_text_out(90, L-10, 0, 0, 55, 25, 1, "TAG3");
 
-	/* Generates eps file with the entire lattice (beginning at site 0,0 with width L and height L), with border width 1 and scale 1. */
+	/* Generates an EPS file with the entire lattice (beginning at site 0,0 with width L and height L), with border width 1 and scale 1. */
 	lat2eps_gen_eps("test.eps", 0, 0, L, L, 1, 1); 
 	lat2eps_release();  /* Releases resources allocated in lat2eps_init. */
 

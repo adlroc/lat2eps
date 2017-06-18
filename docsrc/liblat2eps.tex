@@ -1,0 +1,172 @@
+
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[top=3cm,left=2.5cm,right=2.5cm,bottom=3cm]{geometry}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\title{\vspace{-5ex}liblat2eps v2.0}
+\author{}
+\date{\vspace{-5ex}}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Introduction}
+
+liblat2eps is a small static library providing most of the functionality provided by the lat2eps command to user programs implemented in C or C++. It may be used for exporting lattice graphics in the Encapsulated PostScript (EPS) format directly from the user's programs, without generating an intermediary data file.
+\bigbreak
+
+\section{Installation}
+
+liblat2eps is open source software supplied in source code form. It can be built with the \textit{make} command, which in addition to generating the \texttt{lat2eps} executable will also generate the \texttt{liblat2eps.a} static library. The \textit{gcc} or \textit{clang} compilers must be installed in the system for the build process to succeed. The \texttt{liblat2eps.a} file can be manually copied to a directory where the compiler searches for libraries, like, e.g., \texttt{/usr/local/lib}. The \texttt{lat2eps.h} header file declares the functions provided by the library and can be manually copied to a directory where the compiler searches for header files, like, e.g., \texttt{/usr/local/include}.
+\bigbreak
+
+
+\section{Library Functions}
+
+
+\texttt{int lat2eps\_init(unsigned int width, unsigned int height)}
+\bigbreak
+
+The \texttt{lat2eps\_init()} function initializes the resources required by the EPS generation functionaty, including dinamically allocating memory for holding the lattice state until the EPS output is generated. This function must be called before any other lat2eps function is called. The \textit{width} and \textit{height} parameters define the maximum dimensions of the lattice. The function returns zero for failure, non-zero for success.
+\bigbreak\bigbreak
+
+
+\texttt{void lat2eps\_release()}
+\bigbreak
+
+The \texttt{lat2eps\_release()} function releases the resources allocated by \texttt{lat2eps\_init()}. It must be called after the EPS generation is complete.
+\bigbreak\bigbreak
+
+
+\texttt{void lat2eps\_set\_site(unsigned int x, unsigned int y, int s)}
+\bigbreak
+
+The \texttt{lat2eps\_set\_site()} function sets the state of the site with coordinates \textit{x} and \textit{y} to value \textit{s}, within the liblat2eps internal lattice state.
+\bigbreak
+
+Typically, programs using liblat2eps should copy their internal lattice state to the state held by liblat2eps by calling the \texttt{lat2eps\_set\_site()} function for each lattice site, before calling the \texttt{lat2eps\_gen\_eps()} function to actually generate the EPS output. Programs should avoid calling \texttt{lat2eps\_set\_site()} within their inner simulation loops, as it would likely cause a simulation slowdown. Instead, the programs should perform the copy only when the time for generating a graphic output has arrived, like after a determined number of Monte Carlo steps has been performed. Then the lat2eps lattice state can be set with a loop analogous to the following:
+\bigbreak
+
+\begin{lstlisting}[language=C]
+	for (y = 0; y < L; ++y) {
+		for (x = 0; x < L; ++x) {
+			lat2eps_set_site(x, y, lat[y][x]);
+		}
+	}
+\end{lstlisting}
+\bigbreak
+
+There are 256 different color indexes, ranging from 0 to 255, which can be used to draw lattice sites of different values. Site values are mapped to color indexes according to a simple rule: $index = value \bmod 256$. Negative values are first converted to unsigned values (e.g., -1 is converted to 255, -2 to 254, and so on.). Note: a palette of only 16 different colors is initially defined, repeated over the 256 possible indexes. Thus, if more than 16 colors are needed, they must be redefined through the lat2eps\_set\_color() function.
+\bigbreak\bigbreak
+
+
+\texttt{int lat2eps\_get\_site(unsigned int x, unsigned int y)}
+\bigbreak
+
+The \texttt{lat2eps\_get\_site()} function returns the value of the lattice site with coordinates given by \textit{x} and \textit{y}, previously set by a \texttt{lat2eps\_set\_site()} function call, or the default value 0 if no value has been set. This function has been defined for extension purposes and is not required by typical lattice graphic generation.
+\bigbreak\bigbreak
+
+
+\texttt{void lat2eps\_set\_color(unsigned int index, unsigned int pal)}
+\bigbreak
+
+The \texttt{lat2eps\_set\_color()} function sets the color index specified by the \textit{index} parameter to a value defined by the \textit{pal} parameter, which should be a numeric value in the 0xRRGGBB format (i.e., an integer composed by three bytes, where the most significant byte defines the red component for the color index, from 0x00 to 0xFF, the middle byte defines the green component, and the least significant byte defines the blue component). It must be called before the \texttt{lat2eps\_gen\_eps()} function.
+\bigbreak\bigbreak
+
+
+\texttt{unsigned int lat2eps\_get\_color(unsigned int index)}
+\bigbreak
+
+The \texttt{lat2eps\_get\_color()} function returns the palette definition associated with a color index specified by the \textit{index} parameter. The returned value will be a numeric value in the 0xRRGGBB format.
+\bigbreak\bigbreak
+
+
+\texttt{void lat2eps\_text\_out(float x, float y, float ax, float ay, float angle, unsigned int size, unsigned int color, const char *text)}
+\bigbreak
+
+The \texttt{lat2eps\_text\_out()} function generates text entries over the lattice graphic. It can be used to generate text lines to appear in the graphic as they are, or tags that can be later replaced by LaTeX text using PSFrag. It must be called before the \texttt{lat2eps\_gen\_eps()} function. The parameters are the following:
+
+\begin{itemize}
+  \item \textit{x} is the horizontal coordinate where the text will be positioned. 0 is the leftmost coordinate, and the maximum horizontal coordinate is defined by the lattice width.
+  \item \textit{y} is the vertical coordinate where the text will be positioned. 0 is the topmost coordinate, and the maximum vertical coordinate is defined by the lattice height.
+  \item \textit{ax} defines the horizontal alignment. 0 for left-aligning the text relative to the X coordinate, 0.5 for centering it on the X coordinate, 1 for right-aligning it, etc.
+  \item \textit{ay} defines the vertical alignment. 0 for placing the top of the text on the Y coordinate, 0.5 for centering it on the Y coordinate, 1 for placing the bottom of the text on the Y coordinate, etc.
+  \item \textit{angle} defines the angle to rotate the text, in degrees (0 for horizontal).
+  \item \textit{size} defines the font size.
+  \item \textit{color} defines the color index used to draw the text.
+  \item \textit{text} is the text to be added. Parentheses characters in the text must be escaped with backslashes.
+\end{itemize} 
+\bigbreak\bigbreak
+
+
+\texttt{int lat2eps\_gen\_eps(const char *filename, unsigned int xoff, unsigned int yoff, unsigned int width, unsigned int height, unsigned int border, unsigned int scale)}
+\bigbreak
+
+The \texttt{lat2eps\_gen\_eps()} function creates an EPS file containing a graphic representation of the lattice (or a region of the lattice), using the lattice state information previously set through \texttt{lat2eps\_set\_site()} calls, also generating text entries previously defined by \texttt{void lat2eps\_text\_out()} calls. This function, can be called one or more times, possibly for different regions, before the lattice state is released by a \texttt{lat2eps\_release()} function call. The function returns zero for failure, non-zero for success. The parameters are the following:
+
+\begin{itemize}
+  \item \textit{filename} defines the name of the EPS file that will be created. If this parameter is \texttt{NULL}, then the EPS data will be written to the standard output.
+  \item \textit{xoff} defines the first lattice column that will be saved in the output.
+  \item \textit{yoff} defines the first lattice row that will be saved in the output.
+  \item \textit{width} defines the width (in sites) of the sublattice that will be saved in the output.
+  \item \textit{height} defines the height (in sites) of the sublattice that will be saved in the output.
+  \item \textit{border} defines the width of a black border generated around the lattice graphic, or 0 for generating a borderless graphic.
+  \item \textit{scale} defines the scale used in the conversion of the lattice data to EPS. E.g., when the scale is set to 3, each lattice site will generate a 3x3 pixel square in the EPS output.
+\end{itemize} 
+\bigbreak\bigbreak
+\newpage
+
+\section{Sample Code}
+
+\begin{lstlisting}[language=C]
+#include <math.h>
+#include <lat2eps.h>
+
+#define L   512
+
+int main(int argc, char *argv[])
+{
+	int x, y;
+
+	/* Initializes lat2eps lib for a lattice of width L and height L. */
+	if (!lat2eps_init(L, L)) return -1;
+
+	/* Sets color number 9 to red:60 green:70 blue:a0 */
+	lat2eps_set_color(9, 0x6070a0);
+
+	/* Fills the lattice with a circular pattern. */
+	for (y = 0; y < L; ++y) {
+		for (x = 0; x < L; ++x) {
+			lat2eps_set_site(x, y, (int)sqrt(x*x+y*y)/50);
+		}
+	}
+
+	/* Adds some text. */
+	lat2eps_text_out(5, 5, 0, 0.5, -45, 15, 1, "Hello");
+	lat2eps_text_out(5, L-30, 0, 1, 0, 25, 1, "TAG1");
+	lat2eps_text_out(L-30, 10, 1, 1, 90, 25, 0, "TAG2");
+
+	/* Generates an EPS file with the entire lattice, */
+	/* with border width 1 and scale 1. */
+	lat2eps_gen_eps("test.eps", 0, 0, L, L, 1, 1); 
+
+	/* Releases resources. */
+	lat2eps_release();
+
+	return 0;	
+}
+\end{lstlisting}
+\bigbreak
+
+
+\section{License}
+
+liblat2eps v2.0 is open source software copyrighted by André R. de la Rocha and licensed under the Apache License Version 2.0. You may obtain a copy of the license at: \url{http://www.apache.org/licenses/LICENSE-2.0}
+
+\end{document}
+
