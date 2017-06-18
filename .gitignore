@@ -3,9 +3,7 @@ xcuserdata
 lat2eps
 test
 test2
+grid.dat
 *.o
 *.a
 *.eps
-*.aux
-*.log
-*.out
