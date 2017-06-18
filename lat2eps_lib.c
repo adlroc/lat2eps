@@ -87,7 +87,18 @@ void lat2eps_set_site(unsigned int x, unsigned int y, int s)
 }
 
 
-/* Sets a color index to a palette entry in the 0xRRGGBB format. */
+/* Gets the value of the lattice site with coordinates x,y. */
+int lat2eps_get_site(unsigned int x, unsigned int y)
+{
+	if ((x < maxwidth) && (y < maxheight)) {
+		return lattice[y * maxwidth + x];
+	}
+
+	return 0;
+}
+
+
+/* Sets a color index to a palette entry defined in the 0xRRGGBB format */
 void lat2eps_set_color(unsigned int index, unsigned int pal)
 {
 	if (index < LAT2EPS_MAXQ) {
@@ -96,10 +107,21 @@ void lat2eps_set_color(unsigned int index, unsigned int pal)
 }
 
 
+/* Gets the palette definition associated with a color index. */
+unsigned int lat2eps_get_color(unsigned int index)
+{
+	if (index < LAT2EPS_MAXQ) {
+		return palette[index];
+	}
+	
+	return 0;
+}
+
+
 /* Adds a text entry */
 void lat2eps_text_out(float x, float y, float ax, float ay, float angle, unsigned int size, unsigned int color, const char *text)
 {
-	if ((txtcounter < LAT2EPS_MAXT) && (color < LAT2EPS_MAXQ) && text && (strlen(text) > 0)) {
+	if ((txtcounter < LAT2EPS_MAXT) && (size > 0) && (color < LAT2EPS_MAXQ) && text && (strlen(text) > 0)) {
 		textentry[txtcounter].x = x;
 		textentry[txtcounter].y = y;
 		textentry[txtcounter].ax = ax;

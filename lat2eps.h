@@ -32,7 +32,7 @@ extern "C" {
 * Initializes the lattice resources. Must be called before any other lat2eps function.
 * @param width  Lattice width (in sites).
 * @param height Lattice height (in sites).
-* @return     Zero for failure, non-zero for success.
+* @return       Zero for failure, non-zero for success.
 */
 int lat2eps_init(unsigned int width, unsigned int height);
 
@@ -53,11 +53,28 @@ void lat2eps_set_site(unsigned int x, unsigned int y, int s);
 
 
 /**
+* Gets the value of a lattice site.
+* @param x Horizontal coordinate of the site.
+* @param y Vertical coordinate of the site.
+* @return  Site value.
+*/
+int lat2eps_get_site(unsigned int x, unsigned int y);
+
+
+/**
 * Sets a color index to a palette entry defined in the 0xRRGGBB format.
 * @param index Color index.
 * @param pal   Palette entry in the 0xRRGGBB format.
 */
 void lat2eps_set_color(unsigned int index, unsigned int pal);
+
+
+/**
+* Gets the palette definition associated with a color index.
+* @param index Color index.
+* @return      palette entry defined in the 0xRRGGBB format.
+*/
+unsigned int lat2eps_get_color(unsigned int index);
 
 
 /**
