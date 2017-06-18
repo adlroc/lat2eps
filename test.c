@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "lat2eps.h"
+#include <lat2eps.h>
 
 #define L   512
 #define NCHARS  250

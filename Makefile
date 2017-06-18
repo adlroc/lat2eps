@@ -2,7 +2,7 @@ CC = gcc
 LD = gcc
 AR = ar
 
-CFLAGS = -Wall -O3
+CFLAGS = -Wall -O3 -I.
 LFLAGS = -L. 
 LIBS   = -llat2eps -lm
 
