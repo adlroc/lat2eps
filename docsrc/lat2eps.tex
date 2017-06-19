@@ -20,7 +20,7 @@
 lat2eps is a small command-line utility for Linux, Unix and macOS that generates graphics in the Encapsulated PostScript (EPS) format, depicting the contents of square/rectangular lattices.
 \bigbreak
 
-lat2eps reads the lattice data from the standard input and outputs the EPS data to the standard output. The input file is a simple Gnuplot-compatible text file, where data lines contain at least 3 integer fields separated by spaces, where the first two are the horizontal and vertical coordinates of the lattice site, and the third is the site value. Lines beginning with the \# character are considered comments and ignored, unless they contain embedded internal commands, described below.
+lat2eps reads the lattice data from the standard input and outputs the EPS data to the standard output. The input file should be a simple text file where data lines contain at least 3 integer fields separated by spaces, where the first two fields are the horizontal and vertical coordinates of the lattice site, and the third is the site value. Lines beginning with the \# character are considered comments and ignored, unless they contain embedded internal commands, described below.
 \bigbreak
 
 There are 256 different color indexes, ranging from 0 to 255, which can be used to draw lattice sites of different values. Site values are mapped to color indexes according to a simple rule: $index = value \bmod 256$. Negative values are first converted to unsigned values (e.g., -1 is converted to 255, -2 to 254, and so on). Note: a palette of only 16 different colors is initially defined, repeated over the 256 possible indexes. Thus, if more than 16 colors are needed, they must be redefined, as described below.
@@ -41,7 +41,7 @@ The basic command usage is:
 \texttt{lat2eps  xoff yoff width height border scale  <input.dat  >output.eps}
 \bigbreak
 
-Where \textit{xoff}, \textit{yoff}, \textit{width} and \textit{height} define offsets and dimensions (in sites) of a region within the lattice that will be used to generate the EPS output.
+Where \textit{xoff}, \textit{yoff}, \textit{width} and \textit{height} define offsets and dimensions (in sites) of a region within the lattice, which will be used to generate the EPS output.
 \bigbreak
 
 \textit{border} is the width of a black border generated around the lattice graphic, or 0 for generating a borderless graphic.
@@ -77,7 +77,7 @@ The TXT embedded command is used to generate text entries over the lattice graph
 \texttt{PAL <COLOR\_0\_PALETTE>, <COLOR\_1\_PALETTE>, <COLOR\_2\_PALETTE>, ...}
 \bigbreak
 
-The PAL embedded command can be used to redefine the color palette. It can receive a variable number of parameters. The first parameter will redefine the color index 0, the second will redefine color index 1, and so on. Each parameter is a hexadecimal number in the RRGGBB format (i.e., the first byte defines the red component for the color index, from 00 to FF, the second byte defines the green component, and the third byte defines the blue component).
+The PAL embedded command can be used to redefine the color palette. It can receive a variable number of parameters. The first parameter will redefine the color index 0, the second will redefine color index 1, and so on. Each parameter is a hexadecimal number in the RRGGBB format (i.e., the first byte defines the red component for the color index, from 00 to FF, while the second byte defines the green component, and the third byte defines the blue component).
 \bigbreak\bigbreak
 
 \texttt{COL <COLOR\_INDEX>, <COLOR\_PALETTE>}
@@ -94,7 +94,7 @@ Sample lattice data file with embedded commands:
 #TXT 128, 250, 0.5, 1, 0, 20, 1, X
 #TXT 6, 128, 0.5, 0, 90, 20, 6, Y
 #TXT 128, 128, 0.5, 1, 45, 20, 5, lat2eps test
-#PAL 0, FFFFFF, 334455, 667788, 4433FF
+#PAL 555577, FFFFFF, 334455, 66778A, 4433ff
 #COL 2, 00ffff
 #COL 5, 123456
 
@@ -109,7 +109,7 @@ Sample lattice data file with embedded commands:
 
 \bigbreak
 
-Embedded commands can also be supplied through the command line, as optional parameters to the lat2eps call, after the required parameters. In this case, they should not be preceded by the \# character, and the embedded commands and their parameters must be separated by commas only (or the spaces escaped), so that each embedded command and its parameters are recognized by the shell as a single parameter to the lat2eps command. For instance, to generate text and redefine color number 6:
+Embedded commands can also be supplied through the command line, as optional parameters to the lat2eps command, after the required parameters. In this case, they should not be preceded by the \# character, and the embedded commands and their parameters must be separated by commas only (or the spaces escaped), so that each embedded command together with its parameters are recognized by the shell as a single parameter to the lat2eps command. For instance, to generate text and redefine color number 6:
 \bigbreak
 
 \texttt{lat2eps 0 0 320 320 1 1 TXT,25,25,0,0,0,20,6,Test COL,6,2245FF <lat.dat >lat.eps}
@@ -121,13 +121,13 @@ Embedded commands can also be supplied through the command line, as optional par
 Default configuration parameters can be supplied through a file named \texttt{.lat2epsrc}, placed within the user's home directory. This file can contain embedded commands, exactly in the same way as used in lattice data files, which can be used, for instance, to define a custom color palette to be used by default for the lattice graphics generated by the user.
 \bigbreak
 
-The color palette optionally defined in the defaults file redefines the initial lat2eps color definition. Afterwards, the lattice data input file is processed, which may contain embedded commands to further redefine the colors. After the lattice data is processed, embedded commands supplied through the lat2eps command line are processed, which may again redefine the colors.
+The color palette optionally defined in the \texttt{.lat2epsrc} file redefines the initial lat2eps color definition. Afterwards, the lattice data file is processed, which may contain embedded commands to further redefine the colors. After the lattice data is processed, embedded commands supplied through the lat2eps command line are processed, which may again redefine the colors.
 \bigbreak
 
 
 \section{License}
 
-lat2eps v2.0 is open source software copyrighted by André R. de la Rocha and licensed under the Apache License Version 2.0. You may obtain a copy of the license at: \url{http://www.apache.org/licenses/LICENSE-2.0}
+lat2eps v2.0 is open source software copyrighted by André R. de la Rocha and licensed under the Apache License Version 2.0. A copy of the license can be obtained at: \url{http://www.apache.org/licenses/LICENSE-2.0}
 
 \end{document}
 
