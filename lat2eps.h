@@ -95,10 +95,10 @@ void lat2eps_text_out(float x, float y, float ax, float ay, float angle, unsigne
 /**
 * Generates a lattice graphic in the EPS format.
 * @param filename  Name of the EPS file that will be created, or NULL for outputting to stdout.
-* @param xoff      Offset of the first lattice column that will be presented in the output.
-* @param yoff      Offset of the first lattice row that will be presented in the output.
-* @param width     Width (in sites) of the sublattice that will be presented in the output.
-* @param height    Height (in sites) of the sublattice that will be presented in the output.
+* @param xoff      Offset of the first lattice column that will be presented in the graphic.
+* @param yoff      Offset of the first lattice row that will be presented in the graphic.
+* @param width     Width (in sites) of the sublattice that will be presented in the graphic.
+* @param height    Height (in sites) of the sublattice that will be presented in the graphic.
 * @param border    Width of a black border that will be placed in the graphic (0 for no border).
 * @param scale     Scale that will be used while generating the graphic (e.g., using 2 will create a 2x2 pixel square for each lattice site).
 * @return          Zero for failure, non-zero for success.
