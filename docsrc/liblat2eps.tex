@@ -34,7 +34,7 @@ liblat2eps provides the following functions:
 \texttt{int lat2eps\_init(unsigned int width, unsigned int height)}
 \bigbreak
 
-The \texttt{lat2eps\_init()} function initializes the resources required by the EPS generation functionality, including allocating memory for holding the lattice state until the EPS output can be generated. This function must be called before any other liblat2eps function is called. The \textit{width} and \textit{height} parameters define the maximum dimensions of the lattice. The function returns zero for indicating a failure, or a non-zero value for success.
+The \texttt{lat2eps\_init()} function initializes the resources required by the EPS generation functionality, including allocating memory for holding the lattice state until the EPS output can be generated. This function must be called before any other liblat2eps function is called. The \textit{width} and \textit{height} parameters, which can take values from 1 to 16384, define the maximum dimensions of the lattice. The function returns zero for indicating a failure, or a non-zero value for success.
 \bigbreak\bigbreak
 
 
@@ -113,10 +113,10 @@ The \texttt{lat2eps\_gen\_eps()} function creates an EPS file containing a graph
 
 \begin{itemize}
   \item \textit{filename} defines the name of the EPS file that will be created. If this parameter is \texttt{NULL}, then the EPS data will be written to the standard output.
-  \item \textit{xoff} defines the first lattice column that will be presented in the output.
-  \item \textit{yoff} defines the first lattice row that will be presented in the output.
-  \item \textit{width} defines the width (in sites) of the sublattice that will be presented in the output.
-  \item \textit{height} defines the height (in sites) of the sublattice that will be presented in the output.
+  \item \textit{xoff} defines the first lattice column that will be presented in the graphic.
+  \item \textit{yoff} defines the first lattice row that will be presented in the graphic.
+  \item \textit{width} defines the width (in sites) of the sublattice that will be presented in the graphic.
+  \item \textit{height} defines the height (in sites) of the sublattice that will be presented in the graphic.
   \item \textit{border} defines the width of a black border generated around the lattice graphic, or 0 for generating a borderless graphic.
   \item \textit{scale} defines the scale used in the conversion of the lattice data to EPS. E.g., when the scale is set to 3, each lattice site will generate a 3x3 pixel square in the EPS output.
 \end{itemize} 
